@@ -16,19 +16,7 @@ export interface CreatePoolResult {
   poolCompliant: boolean;
 }
 
-/**
- * Greedy pooling algorithm for FuelEU compliance.
- *
- * Rules:
- * - Sum of CB must be >= 0 (otherwise full pooling to non-negative is impossible).
- * - Deficit ships cannot become worse.
- * - Surplus ships cannot become negative.
- *
- * Algorithm:
- * - Sort members by CB descending.
- * - Transfer surplus to deficit.
- * - Return `cbAfter` for each member.
- */
+
 export function createPool(input: CreatePoolInput): CreatePoolResult {
   const originalMembers = input.members;
 
