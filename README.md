@@ -12,7 +12,6 @@ The application allows users to view vessel routes, select baseline routes, comp
 
 The system is built using **React (frontend), Node.js + Express + TypeScript (backend), and PostgreSQL (database)** following **Hexagonal Architecture** principles.
 
-# 🚢 FuelEU Maritime Compliance Dashboard
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/suhel786-byte/fueleu-compliance-dashboard)
 
