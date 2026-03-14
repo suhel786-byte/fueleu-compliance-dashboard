@@ -1,83 +1,163 @@
-# FuelEU Compliance Dashboard
+# 🚢 FuelEU Maritime Compliance Dashboard
 
-## Overview
+![Node.js](https://img.shields.io/badge/Node.js-18-green)
+![React](https://img.shields.io/badge/React-Frontend-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-Backend-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
+![Architecture](https://img.shields.io/badge/Architecture-Hexagonal-orange)
 
-The **FuelEU Compliance Dashboard** is a full-stack application designed to analyze maritime fuel emissions and evaluate compliance with the **FuelEU Maritime regulation**.
+A full-stack dashboard that evaluates maritime fuel emissions and determines **FuelEU Maritime compliance** for vessel routes.
 
-The dashboard allows users to:
+The application allows users to view vessel routes, select baseline routes, compare emissions performance, and evaluate compliance metrics.
 
-* View vessel routes and their GHG intensity
-* Compare routes against a selected baseline
-* Evaluate compliance status
-* Perform banking and pooling compliance operations
-
-The system uses a **Node.js + TypeScript backend** and a **web-based frontend dashboard** that interacts with REST APIs.
+The system is built using **React (frontend), Node.js + Express + TypeScript (backend), and PostgreSQL (database)** following **Hexagonal Architecture** principles.
 
 ---
 
-# Architecture Summary (Hexagonal Architecture)
+# Overview
 
-The backend follows **Hexagonal Architecture (Ports and Adapters)** to keep business logic independent from external frameworks.
+The **FuelEU Maritime Compliance Dashboard** helps analyze greenhouse gas (GHG) intensity across maritime routes and determine compliance with FuelEU regulatory targets.
+
+Key features:
+
+* View available vessel routes
+* Compare routes against a selected baseline
+* Calculate percentage differences in GHG intensity
+* Determine compliant vs non-compliant routes
+* Simulate **banking compliance calculations**
+* Simulate **pooling compliance strategies**
+
+Route data is stored in a **PostgreSQL database** and accessed through REST APIs.
+
+---
+
+# System Architecture
+
+The backend follows **Hexagonal Architecture (Ports and Adapters)** to separate business logic from external infrastructure.
+
+## Layers
 
 ### Domain Layer
 
-Contains core entities and models such as:
+Contains core business entities.
 
-* `Route`
-* Compliance data structures
+Examples:
+
+* Route model
+* Compliance calculation inputs
+
+---
 
 ### Application Layer
 
-Implements business logic such as:
+Implements business logic and calculations.
 
-* GHG comparison calculations
-* Compliance status evaluation
+Example:
 
-Example service:
+* `computeComparison`
 
-```
-computeComparison
-```
+This service calculates the difference between a baseline route and comparison routes.
+
+---
 
 ### Adapters Layer
 
 Handles communication with external systems.
 
-**Inbound Adapters**
+Inbound adapters:
 
 * Express HTTP controllers
-* Example:
+* REST API endpoints
+
+Example:
 
 ```
 routesController.ts
 ```
 
-**Outbound Adapters**
+Outbound adapters:
 
-* External APIs or database integrations (future expansion)
+* PostgreSQL database connection
 
-### Architecture Flow
+---
 
-User Request
-→ HTTP Route (Controller)
-→ Application Service
-→ Domain Logic
-→ Response Returned
+# Architecture Diagram
 
-This structure improves **testability, modularity, and maintainability**.
+```mermaid
+flowchart LR
+
+A[React Frontend] --> B[Express Controller]
+
+B --> C[Application Service]
+
+C --> D[(PostgreSQL Database)]
+```
+
+---
+
+# Database
+
+The system stores route data in a **PostgreSQL database**.
+
+Database name:
+
+```
+fueleu_dashboard
+```
+
+## Routes Table
+
+| Column        | Type    |
+| ------------- | ------- |
+| route_id      | VARCHAR |
+| vessel_type   | VARCHAR |
+| fuel_type     | VARCHAR |
+| year          | INT     |
+| ghg_intensity | FLOAT   |
+
+The backend accesses the database using the **pg Node.js driver**.
+
+---
+
+# Project Structure
+
+```
+fueleu-compliance-dashboard
+│
+├── backend
+│   ├── src
+│   │   ├── core
+│   │   │   ├── domain
+│   │   │   └── application
+│   │   └── adapters
+│   │       └── inbound/http
+│
+├── frontend
+│
+├── screenshots
+│
+├── README.md
+├── AGENT_WORKFLOW.md
+├── REFLECTION.md
+│
+├── package.json
+└── tsconfig.json
+```
 
 ---
 
 # Setup & Run Instructions
 
-## 1 Clone Repository
+## Clone the repository
 
 ```bash
 git clone <repository-url>
 cd fueleu-compliance-dashboard
 ```
 
-## 2 Install Dependencies
+---
+
+## Install dependencies
 
 Backend:
 
@@ -86,7 +166,7 @@ cd backend
 npm install
 ```
 
-Frontend (if applicable):
+Frontend:
 
 ```bash
 cd frontend
@@ -95,13 +175,19 @@ npm install
 
 ---
 
-## 3 Run Backend Server
+## Start PostgreSQL
+
+Ensure PostgreSQL is running and the database **fueleu_dashboard** exists.
+
+---
+
+## Run backend server
 
 ```bash
 npm run dev
 ```
 
-Server will run at:
+Server runs at:
 
 ```
 http://localhost:3000
@@ -109,36 +195,42 @@ http://localhost:3000
 
 ---
 
-# Running Tests
-
-Execute tests using:
+## Run frontend
 
 ```bash
-npm test
+npm start
+```
+
+Frontend runs at:
+
+```
+http://localhost:3001
 ```
 
 ---
 
 # Example API Request
 
-### Request
+### Get routes
 
 ```
 GET /routes
 ```
 
-### Response
+### Example response
 
 ```json
-[
-  {
-    "routeId": "R001",
-    "vesselType": "Container",
-    "fuelType": "HFO",
-    "year": 2024,
-    "ghgIntensity": 91
-  }
-]
+{
+  "routes": [
+    {
+      "routeId": "R001",
+      "vesselType": "Container",
+      "fuelType": "HFO",
+      "year": 2024,
+      "ghgIntensity": 91
+    }
+  ]
+}
 ```
 
 ---
@@ -147,15 +239,11 @@ GET /routes
 
 ## Routes Page
 
-Shows available vessel routes and their GHG intensity with an option to set a baseline.
-
 ![Routes](screenshots/routes.png)
 
 ---
 
 ## Route Comparison
-
-Displays the percentage difference compared to the baseline and compliance status.
 
 ![Compare](screenshots/compare.png)
 
@@ -163,15 +251,11 @@ Displays the percentage difference compared to the baseline and compliance statu
 
 ## Banking Compliance
 
-Allows users to input compliance balance and calculate bank surplus.
-
 ![Banking](screenshots/banking.png)
 
 ---
 
 ## Pooling Compliance
-
-Allows creation of compliance pools and displays pooled member information.
 
 ![Pooling](screenshots/pooling.png)
 
@@ -179,15 +263,46 @@ Allows creation of compliance pools and displays pooled member information.
 
 # Technologies Used
 
+Frontend
+
+* React
+
+Backend
+
 * Node.js
 * Express.js
 * TypeScript
-* REST APIs
-* Hexagonal Architecture
-* Web Dashboard UI
 
----
+Database
+
+* PostgreSQL
+
+Architecture
+
+* Hexagonal Architecture (Ports & Adapters)
+
+Tools
+
+* Git
+* GitHub
+* AI-assisted development
+
+
+
+# Documentation
+
+This repository also includes:
+
+**AGENT_WORKFLOW.md**
+
+Documents how AI tools were used during development.
+
+**REFLECTION.md**
+
+Provides a reflection on the use of AI agents and productivity improvements.
+
 
 # Author
 
 Suhel Baig
+
